@@ -21,7 +21,7 @@ var loader = new THREE.ImageLoader();
 // load a image resource
 loader.load(
     // resource URL
-    'textures/skyboxsun25degtest.png',
+    'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSLNB1XgMrZqF-wfx8kNdfohV3DBL4vfKrhAUItsCi17Zm5LroWjD8oJ6I',
     // Function when resource is loaded
     function ( image ) {
         // do something with it
