@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>My first Three.js app</title>
+		<style>
+			html, body {
+				width: 100%;
+				height: 100%;
+			}
+
+			body {
+				background-color: #ffffff;
+				margin: 0;
+				overflow: hidden;
+				font-family: arial;
+			}
+
+			#blocker {
+
+				position: absolute;
+
+				width: 100%;
+				height: 100%;
+
+				background-color: rgba(0,0,0,0.5);
+
+			}
+
+			#instructions {
+
+				width: 100%;
+				height: 100%;
+
+				display: -webkit-box;
+				display: -moz-box;
+				display: box;
+
+				-webkit-box-orient: horizontal;
+				-moz-box-orient: horizontal;
+				box-orient: horizontal;
+
+				-webkit-box-pack: center;
+				-moz-box-pack: center;
+				box-pack: center;
+
+				-webkit-box-align: center;
+				-moz-box-align: center;
+				box-align: center;
+
+				color: #ffffff;
+				text-align: center;
+
+				cursor: pointer;
+
+			}
+
+		</style>
+	</head>
+	</head>
+	<body>
+		<script src="js/three.min.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src='js/THREEx.KeyboardState.js'></script>
+		<script src='js/FirstPersonControls.js'></script>
+		<script src='js/PointerLockControls.js'></script>
+		<script>
+
+			var clock = new THREE.Clock();
+			var keyboard = new THREEx.KeyboardState();
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+
+			camera.position.x = 1;
+			camera.position.y = 10;
+			camera.position.z = 10;
+			camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+
+			var ambientLight = new THREE.AmbientLight(0x383838);
+			scene.add(ambientLight);
+
+			// add spotlight for the shadows
+			var spotLight = new THREE.SpotLight(0xffffff);
+			spotLight.position.set(100, 140, 130);
+			spotLight.intensity = 2;
+			scene.add(spotLight);
+
+
+			// axes
+			var axes = new THREE.AxisHelper(100);
+			scene.add( axes );
+			var imagePrefix = "images/";
+			var directions  = ["front", "back", "up", "down", "left", "right"];
+			var imageSuffix = ".png";
+			var skyGeometry = new THREE.CubeGeometry( 200, 200, 200 );
+
+
+			var materialArray = [];
+
+			for (var i = 0; i < 6; i++)
+				materialArray.push( new THREE.MeshBasicMaterial({
+					map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+					side: THREE.BackSide
+				}));
+
+			var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+			var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+			scene.add( skyBox );
+
+
+			var camControls = new THREE.FirstPersonControls(camera);
+			camControls.lookSpeed = 0.4;
+			camControls.movementSpeed = 20;
+			camControls.noFly = true;
+			camControls.lookVertical = true;
+			camControls.constrainVertical = false;
+			camControls.verticalMin = 1.0;
+			camControls.verticalMax = 2.0;
+			camControls.lon = -150;
+			camControls.lat = 120;
+
+
+
+
+			function render() {
+				var delta = clock.getDelta();
+				camControls.update(delta);
+				requestAnimationFrame( render );
+				renderer.render( scene, camera );
+			}
+			render();
+		</script>
+	</body>
+</html>
+
